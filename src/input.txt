@@ -1,0 +1,11 @@
+12345
+string
+12.5
+low
+hello
+5000
+100
+input
+file
+float
+2.225
