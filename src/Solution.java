@@ -21,11 +21,21 @@ public class Solution {
         boolean fullStats = false;
         boolean shortStats = false;
 
-        BigInteger sum = BigInteger.valueOf(0);
-        double average = 0;
-        int intCount = 0;
-        int floatCount = 0;
         int stringCount = 0;
+        int minLength = Integer.MAX_VALUE;
+        int maxLength = 0;
+
+        int intCount = 0;
+        int minInt = Integer.MAX_VALUE;
+        int maxInt = Integer.MIN_VALUE;
+        double sumInt = 0;
+        double averageInt = 0;
+
+        int floatCount = 0;
+        float minFloat = Float.MAX_VALUE;
+        float maxFloat = Float.MIN_VALUE;
+        double sumFloat = 0;
+        double averageFloat = 0;
 
         for (int i = 0; i < args.length; ++i) {
             if (args[i].equals("-o") && i < args.length - 1) {
@@ -69,11 +79,14 @@ public class Solution {
                     if (typeSorter(line) == 0) {  // integer
                         if (intWriter == null) {
                             intWriter = new BufferedWriter(new FileWriter(intOutputFile, appendMode));
-                            if (shortStats) {
+                            if (shortStats || fullStats) {
                                 intCount++;
                             }
                             if (fullStats) {
-                                //todo if fullStats
+                                int num = Integer.parseInt(line);
+                                minInt = Integer.min(num, minInt);
+                                maxInt = Integer.max(num, maxInt);
+                                sumInt += num;
                             }
                         }
                         intWriter.write(line);
@@ -81,11 +94,14 @@ public class Solution {
                     } else if (typeSorter(line) == 1) {  // float
                         if (floatWriter == null) {
                             floatWriter = new BufferedWriter(new FileWriter(floatOutputFile, appendMode));
-                            if (shortStats) {
+                            if (shortStats || fullStats) {
                                 floatCount++;
                             }
                             if (fullStats) {
-                                //todo if fullStats
+                                float num = Float.parseFloat(line);
+                                minFloat = Float.min(num, minFloat);
+                                maxFloat = Float.max(num, maxFloat);
+                                sumFloat += num;
                             }
                         }
                         floatWriter.write(line);
@@ -93,11 +109,12 @@ public class Solution {
                     } else if (typeSorter(line) == 2) {  // string
                         if (stringWriter == null) {
                             stringWriter = new BufferedWriter(new FileWriter(stringOutputFile, appendMode));
-                            if (shortStats) {
+                            if (shortStats || fullStats) {
                                 stringCount++;
                             }
                             if (fullStats) {
-                                //todo if fullStats
+                                minLength = Integer.min(minLength, line.length());
+                                maxLength = Integer.max(maxLength, line.length());
                             }
                         }
                         stringWriter.write(line);
@@ -129,6 +146,20 @@ public class Solution {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if (shortStats || fullStats) {
+            System.out.println("            Краткая статистика:");
+            System.out.println(String.format("%8d", "int") + String.format("%8d", "float") + String.format("%8d", "string"));
+            System.out.println("Кол-во " + String.format("%8d", intCount) + String.format("%8d", floatCount) + String.format("%8d", stringCount));
+        }
+
+        if (fullStats) {
+            System.out.println("            Полная статистика");
+            System.out.println("min " + String.format("%8c", minInt) + String.format("%8d", minFloat) + String.format("%8d", minLength));
+            System.out.println("max " + String.format("%8d", maxInt) + String.format("%8d", maxFloat) + String.format("%8d", maxLength));
+            System.out.println("sum " + String.format("%8d", sumInt) + String.format("%8d", sumFloat));
+            System.out.println("avg " + String.format("%8d", averageInt) + String.format("%8d", averageFloat));
+        }
+
         System.out.println("Данные файлов отсортированы");
     }
 
