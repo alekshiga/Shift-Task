@@ -16,13 +16,11 @@ public class Main {
     static int minInt = Integer.MAX_VALUE;
     static int maxInt = Integer.MIN_VALUE;
     static double sumInt = 0;
-    static double averageInt = 0;
 
     static int floatCount = 0;
     static float minFloat = Float.POSITIVE_INFINITY;
     static float maxFloat = Float.MIN_VALUE;
     static double sumFloat = 0;
-    static double averageFloat = 0;
     static String outputPath = "";
     static String filePrefix = "";
 
