@@ -1,13 +1,11 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+public class Main {
 
     static boolean appendMode = false;
-    static boolean fullStats = true;   //todo false, add for loop
+    static boolean fullStats = false;
     static boolean shortStats = false;
 
     static int stringCount = 0;
@@ -28,7 +26,7 @@ public class Solution {
     static String outputPath = "";
     static String filePrefix = "";
 
-    public static void main(@NotNull String[] args) {
+    public static void main(String[] args) {
 
         if (args.length < 1) {
             System.out.print("Не найдено входных файлов");
@@ -37,15 +35,15 @@ public class Solution {
 
         List<String> inputFileNames = new ArrayList<>(List.of(args));
 
-        for (int i = 0; i < args.length; ++i) {
+        for (int i = args.length - 1; i >= 0; --i) {
             if (args[i].equals("-o") && i < args.length - 1) {
                 outputPath = args[i + 1];
-                inputFileNames.remove(i);
                 inputFileNames.remove(i + 1);
+                inputFileNames.remove(i);
             } else if (args[i].equals("-p") && i < args.length - 1) {
                 filePrefix = args[i + 1];
-                inputFileNames.remove(i);
                 inputFileNames.remove(i + 1);
+                inputFileNames.remove(i);
             }
             else if (args[i].equals("-a")) {
                 appendMode = true;
@@ -70,12 +68,11 @@ public class Solution {
             floatOutputFile = outputPath + File.separator + filePrefix + "floats.txt";
             stringOutputFile = outputPath + File.separator + filePrefix + "strings.txt";
         }
-        
-        BufferedWriter intWriter = null;
-        BufferedWriter floatWriter = null;
-        BufferedWriter stringWriter = null;
 
         for (String filename : inputFileNames) {
+            BufferedWriter intWriter = null;
+            BufferedWriter floatWriter = null;
+            BufferedWriter stringWriter = null;
 
             try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
                 String line;
@@ -149,25 +146,21 @@ public class Solution {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-
-            if (shortStats) {
-                System.out.println("Краткая статистика:");
-                System.out.println("            int    " + "    float    " + "  string  ");
-                System.out.println("Кол-во " + String.format("%8d", intCount) + String.format("%13d", floatCount) + String.format("%12d", stringCount));
-            } else if (fullStats) {
-                System.out.println("\nПолная статистика");
-                System.out.println("              int    " + "      float    " + "  string  ");
-                System.out.println("Кол-во " + String.format("%10d", intCount) + String.format("%15d", floatCount) + String.format("%12d", stringCount));
-                System.out.println("min " + String.format("%13d", minInt) + String.format("%15f", minFloat) + String.format("%12d", minLength));
-                System.out.println("max " + String.format("%13d", maxInt) + String.format("%15f", maxFloat) + String.format("%12d", maxLength));
-                System.out.println("sum " + String.format("%13.2f", sumInt) + String.format("%15.2f", sumFloat));
-                System.out.println("avg " + String.format("%13.4f", averageInt) + String.format("%15.4f", averageFloat));
-            }
-
-
         }
         System.out.println("\nДанные файлов отсортированы");
+        if (shortStats) {
+            System.out.println("Краткая статистика:");
+            System.out.println("            int    " + "    float    " + "  string  ");
+            System.out.println("Кол-во " + String.format("%8d", intCount) + String.format("%13d", floatCount) + String.format("%12d", stringCount));
+        } else if (fullStats) {
+            System.out.println("\nПолная статистика");
+            System.out.println("              int    " + "      float    " + "  string  ");
+            System.out.println("Кол-во " + String.format("%10d", intCount) + String.format("%15d", floatCount) + String.format("%12d", stringCount));
+            System.out.println("min " + String.format("%13d", minInt) + String.format("%15f", minFloat) + String.format("%12d", minLength));
+            System.out.println("max " + String.format("%13d", maxInt) + String.format("%15f", maxFloat) + String.format("%12d", maxLength));
+            System.out.println("sum " + String.format("%13.2f", sumInt) + String.format("%15.2f", sumFloat));
+            System.out.println("avg " + String.format("%13.4f", (float) sumInt/intCount) + String.format("%15.4f", sumFloat/floatCount));
+        }
     }
 
     private static int typeSorter(String line) {
